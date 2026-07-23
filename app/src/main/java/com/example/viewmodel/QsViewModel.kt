@@ -25,14 +25,46 @@ data class MaterialSummaryItem(
     val totalQuantity: Double,
     val unit: String,
     val estimatedTotalCost: Double
-)
+) {
+    val roundedQuantity: Double
+        get() = kotlin.math.ceil(totalQuantity)
+
+    val formattedRounded: String
+        get() {
+            val rounded = roundedQuantity
+            return if (rounded % 1.0 == 0.0) {
+                String.format(Locale.US, "%.0f", rounded)
+            } else {
+                String.format(Locale.US, "%.1f", rounded)
+            }
+        }
+
+    val formattedExact: String
+        get() = String.format(Locale.US, "%.2f", totalQuantity)
+}
 
 data class LaborOhSummaryItem(
     val roleName: String,
     val totalOh: Double,
     val estimatedDailyWage: Double = 0.0,
     val estimatedTotalCost: Double = 0.0
-)
+) {
+    val roundedOh: Double
+        get() = kotlin.math.ceil(totalOh)
+
+    val formattedRounded: String
+        get() {
+            val rounded = roundedOh
+            return if (rounded % 1.0 == 0.0) {
+                String.format(Locale.US, "%.0f", rounded)
+            } else {
+                String.format(Locale.US, "%.1f", rounded)
+            }
+        }
+
+    val formattedExact: String
+        get() = String.format(Locale.US, "%.2f", totalOh)
+}
 
 data class RabSummaryState(
     val subtotalBiayaFisik: Double = 0.0,
@@ -162,11 +194,12 @@ class QsViewModel(application: Application) : AndroidViewModel(application) {
 
             val materialSummaryList = materialMap.map { (matName, pair) ->
                 val estimatedUnitPrice = getFallbackMaterialPrice(matName)
+                val roundedQty = kotlin.math.ceil(pair.first)
                 MaterialSummaryItem(
                     materialName = matName,
                     totalQuantity = pair.first,
                     unit = pair.second,
-                    estimatedTotalCost = pair.first * estimatedUnitPrice
+                    estimatedTotalCost = roundedQty * estimatedUnitPrice
                 )
             }.sortedByDescending { it.totalQuantity }
 
@@ -178,11 +211,12 @@ class QsViewModel(application: Application) : AndroidViewModel(application) {
                     else -> 1.0
                 }
                 val wageRate = baseWage * multiplier
+                val roundedOh = kotlin.math.ceil(totalOh)
                 LaborOhSummaryItem(
                     roleName = role,
                     totalOh = totalOh,
                     estimatedDailyWage = wageRate,
-                    estimatedTotalCost = totalOh * wageRate
+                    estimatedTotalCost = roundedOh * wageRate
                 )
             }.sortedByDescending { it.totalOh }
 

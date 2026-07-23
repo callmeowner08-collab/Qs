@@ -426,22 +426,47 @@ fun DashboardScreen(
                                                         fontWeight = FontWeight.SemiBold,
                                                         fontSize = 12.sp
                                                     )
-                                                    if (mat.estimatedTotalCost > 0) {
+                                                    Row(
+                                                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                                        verticalAlignment = Alignment.CenterVertically
+                                                    ) {
                                                         Text(
-                                                            text = "Est. ${ExportUtils.formatRupiah(mat.estimatedTotalCost)}",
+                                                            text = "Kebutuhan Pas: ${mat.formattedExact} ${mat.unit}",
                                                             fontSize = 10.sp,
-                                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f)
                                                         )
+                                                        if (mat.estimatedTotalCost > 0) {
+                                                            Text(
+                                                                text = "• Est: ${ExportUtils.formatRupiah(mat.estimatedTotalCost)}",
+                                                                fontSize = 10.sp,
+                                                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f),
+                                                                fontWeight = FontWeight.Medium
+                                                            )
+                                                        }
                                                     }
                                                 }
                                             }
-                                            Text(
-                                                text = "${String.format("%.2f", mat.totalQuantity)} ${mat.unit}",
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                fontWeight = FontWeight.Bold,
-                                                fontSize = 12.sp,
-                                                color = MaterialTheme.colorScheme.primary
-                                            )
+                                            Column(horizontalAlignment = Alignment.End) {
+                                                Text(
+                                                    text = "${mat.formattedRounded} ${mat.unit}",
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    fontWeight = FontWeight.ExtraBold,
+                                                    fontSize = 12.5.sp,
+                                                    color = MaterialTheme.colorScheme.primary
+                                                )
+                                                Surface(
+                                                    shape = RoundedCornerShape(4.dp),
+                                                    color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+                                                ) {
+                                                    Text(
+                                                        text = "Pembulatan",
+                                                        fontSize = 8.5.sp,
+                                                        fontWeight = FontWeight.Bold,
+                                                        color = MaterialTheme.colorScheme.primary,
+                                                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                                                    )
+                                                }
+                                            }
                                         }
                                     }
 
@@ -473,6 +498,7 @@ fun DashboardScreen(
                 // Labor & Worker Requirement Breakdown Section
                 item {
                     val totalLaborOh = summary.laborOhSummaryList.sumOf { it.totalOh }
+                    val totalRoundedLaborOh = summary.laborOhSummaryList.sumOf { it.roundedOh }.toInt()
                     val totalLaborCost = summary.laborOhSummaryList.sumOf { it.estimatedTotalCost }
                     val displayLabor = if (isLaborExpanded) summary.laborOhSummaryList else summary.laborOhSummaryList.take(5)
 
@@ -506,9 +532,9 @@ fun DashboardScreen(
                                             letterSpacing = 0.5.sp
                                         )
                                         Text(
-                                            text = "${String.format("%.1f", totalLaborOh)} Orang-Hari (OH) dibutuhkan",
+                                            text = "$totalRoundedLaborOh OH dibulatkan (Pas: ${String.format("%.1f", totalLaborOh)} OH)",
                                             fontSize = 10.sp,
-                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f)
                                         )
                                     }
                                 }
@@ -590,18 +616,25 @@ fun DashboardScreen(
                                                         modifier = Modifier.size(16.dp)
                                                     )
                                                     Spacer(modifier = Modifier.width(6.dp))
-                                                    Text(
-                                                        text = labor.roleName,
-                                                        style = MaterialTheme.typography.bodyMedium,
-                                                        fontWeight = FontWeight.SemiBold,
-                                                        fontSize = 12.sp
-                                                    )
+                                                    Column {
+                                                        Text(
+                                                            text = labor.roleName,
+                                                            style = MaterialTheme.typography.bodyMedium,
+                                                            fontWeight = FontWeight.SemiBold,
+                                                            fontSize = 12.sp
+                                                        )
+                                                        Text(
+                                                            text = "Kebutuhan Pas: ${labor.formattedExact} OH",
+                                                            fontSize = 10.sp,
+                                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f)
+                                                        )
+                                                    }
                                                 }
                                                 Column(horizontalAlignment = Alignment.End) {
                                                     Text(
-                                                        text = "${String.format("%.1f", labor.totalOh)} OH",
+                                                        text = "${labor.formattedRounded} OH",
                                                         fontWeight = FontWeight.ExtraBold,
-                                                        fontSize = 12.sp,
+                                                        fontSize = 12.5.sp,
                                                         color = MaterialTheme.colorScheme.secondary
                                                     )
                                                     Text(

@@ -604,19 +604,29 @@ fun MaterialBreakdownList(materials: List<com.example.viewmodel.MaterialSummaryI
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(mat.materialName, fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                            Text("Koefisien SNI Terhitung Otomatis", fontSize = 10.sp, color = Color.Gray)
+                            Text("Kebutuhan Pas: ${mat.formattedExact} ${mat.unit}", fontSize = 11.sp, color = Color.Gray, fontWeight = FontWeight.Medium)
                         }
                         Surface(
                             shape = RoundedCornerShape(8.dp),
                             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
                         ) {
-                            Text(
-                                text = "${String.format(Locale.US, "%.2f", mat.totalQuantity)} ${mat.unit}",
-                                fontWeight = FontWeight.ExtraBold,
-                                color = MaterialTheme.colorScheme.primary,
+                            Column(
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                                fontSize = 12.sp
-                            )
+                                horizontalAlignment = Alignment.End
+                            ) {
+                                Text(
+                                    text = "${mat.formattedRounded} ${mat.unit}",
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = 12.5.sp
+                                )
+                                Text(
+                                    text = "Pembulatan",
+                                    fontSize = 8.5.sp,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                     }
                 }
@@ -647,19 +657,29 @@ fun LaborOhBreakdownList(laborOhList: List<com.example.viewmodel.LaborOhSummaryI
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(labor.roleName, fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                            Text("Standard Orang Hari (OH) SNI AHSP", fontSize = 10.sp, color = Color.Gray)
+                            Text("Kebutuhan Pas: ${labor.formattedExact} OH", fontSize = 11.sp, color = Color.Gray, fontWeight = FontWeight.Medium)
                         }
                         Surface(
                             shape = RoundedCornerShape(8.dp),
                             color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f)
                         ) {
-                            Text(
-                                text = "${String.format(Locale.US, "%.1f", labor.totalOh)} OH",
-                                fontWeight = FontWeight.ExtraBold,
-                                color = MaterialTheme.colorScheme.secondary,
+                            Column(
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                                fontSize = 12.sp
-                            )
+                                horizontalAlignment = Alignment.End
+                            ) {
+                                Text(
+                                    text = "${labor.formattedRounded} OH",
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    fontSize = 12.5.sp
+                                )
+                                Text(
+                                    text = "Pembulatan",
+                                    fontSize = 8.5.sp,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                     }
                 }
